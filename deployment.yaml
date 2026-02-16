@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: abc-container
-        image: mhafeel/ABCtechnologies:1
+        image: mhafeel/abctechnologies:1
         ports:
         - containerPort: 8080 
