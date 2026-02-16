@@ -2,6 +2,7 @@
 - name: Deploy to AKS
   hosts: localhost
   connection: local
+  gather_facts: false  
   tasks:
 
     - name: Apply Deployment
@@ -9,9 +10,11 @@
         kubeconfig: "/var/lib/jenkins/kubeconfig"
         state: present
         src: deployment.yaml
+        namespace: default  
 
     - name: Apply Service
       kubernetes.core.k8s:
         kubeconfig: "/var/lib/jenkins/kubeconfig"
         state: present
         src: svc.yaml
+        namespace: default 
