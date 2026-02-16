@@ -1,8 +1,12 @@
 pipeline {
     agent any
 
-    stages {
+    environment {
+        DOCKER_IMAGE = "hafeel/abctech:latest"
+        DOCKER_REGISTRY = "docker.io"
+    }
 
+    stages {
         stage('Checkout') {
             steps {
                 git 'https://github.com/hafeelboit/IGP-Jan19.git'
@@ -11,7 +15,7 @@ pipeline {
 
         stage('Compile') {
             steps {
-                sh 'mvn compile'
+                sh 'mvn clean compile'
             }
         }
 
@@ -25,6 +29,33 @@ pipeline {
             steps {
                 sh 'mvn package'
             }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh "docker build -t $DOCKER_IMAGE ."
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                sh "docker push $DOCKER_IMAGE"
+            }
+        }
+
+        stage('Deploy to AKS via Ansible') {
+            steps {
+                sh 'ansible-playbook ansible/k8s-deploy.yml'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }

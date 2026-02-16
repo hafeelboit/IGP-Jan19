@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: abc-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: abc
+  template:
+    metadata:
+      labels:
+        app: abc
+    spec:
+      containers:
+      - name: abc-container
+        image: mhafeel/ABCtechnologies:1
+        ports:
+        - containerPort: 8080
